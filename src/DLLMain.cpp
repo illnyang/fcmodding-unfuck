@@ -175,6 +175,7 @@ BOOL __stdcall hook_ReadFile(HANDLE       hFile,
             if (entry.lpBuffer == nullptr) {
                 entry.lpBuffer = lpBuffer;
             }
+            // skip hashing = speed-up
             else if (entry.hHash != nullptr) {
                 SetLastError(ERROR_HANDLE_EOF);
                 return FALSE;
@@ -349,6 +350,7 @@ NTSTATUS __stdcall hook_NtQueryDirectoryFile(HANDLE                 FileHandle,
                 prevInfo->NextEntryOffset += curInfo->NextEntryOffset;
             }
 
+            // TODO: if ".orig" variant of file is present, use its hash & filesize instead
             if (auto it = s_Spoof.find(fileNameHash ^ g_Variant); it != s_Spoof.end()) {
                 curInfo->EndOfFile.QuadPart = std::get<1>(it->second);
             }
