@@ -40,12 +40,12 @@ if(VC-LTL_ADDED)
 
     target_link_libraries(VC-LTL INTERFACE
             # MultiThreaded
-            # ${VC-LTL_SOURCE_DIR}/TargetPlatform/${VC-LTL_SDK_VER}/lib/${VC-LTL_TARGET_ARCH}/libvcruntime.lib
-            # ${VC-LTL_SOURCE_DIR}/TargetPlatform/${VC-LTL_SDK_VER}/lib/${VC-LTL_TARGET_ARCH}/libucrt.lib
+            ${VC-LTL_SOURCE_DIR}/TargetPlatform/${VC-LTL_SDK_VER}/lib/${VC-LTL_TARGET_ARCH}/libvcruntime.lib
+            ${VC-LTL_SOURCE_DIR}/TargetPlatform/${VC-LTL_SDK_VER}/lib/${VC-LTL_TARGET_ARCH}/libucrt.lib
 
             # MultiThreadedDLL
-            ${VC-LTL_SOURCE_DIR}/TargetPlatform/${VC-LTL_SDK_VER}/lib/${VC-LTL_TARGET_ARCH}/vcruntime.lib
-            ${VC-LTL_SOURCE_DIR}/TargetPlatform/${VC-LTL_SDK_VER}/lib/${VC-LTL_TARGET_ARCH}/ucrt.lib
+            #${VC-LTL_SOURCE_DIR}/TargetPlatform/${VC-LTL_SDK_VER}/lib/${VC-LTL_TARGET_ARCH}/vcruntime.lib
+            #${VC-LTL_SOURCE_DIR}/TargetPlatform/${VC-LTL_SDK_VER}/lib/${VC-LTL_TARGET_ARCH}/ucrt.lib
     )
 
     target_include_directories(VC-LTL INTERFACE
@@ -68,7 +68,10 @@ CPMAddPackage("gh:serge-sans-paille/frozen#master")
 
 add_library(fc3_noarman SHARED src/DLLMain.cpp)
 
-set_target_properties(fc3_noarman PROPERTIES OUTPUT_NAME "version")
+set_target_properties(fc3_noarman PROPERTIES
+        OUTPUT_NAME "version"
+        MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>"
+)
 
 target_compile_options(fc3_noarman PRIVATE
         -fmacro-prefix-map=${PROJECT_SOURCE_DIR}=.
